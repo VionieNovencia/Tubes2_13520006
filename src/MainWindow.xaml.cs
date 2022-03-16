@@ -166,8 +166,24 @@ namespace FolderCrawler
 						queue.Enqueue(newDirs[i]);
 					}
 					string[] files = Directory.GetFiles(current);
+					bool found = false;
+					string tempRes = "";
 					foreach(var file in files) {
-						root.AddChild(new DirectoryTree(file));
+						if(Helper.GetRightSide(file) == FileToSearch.Text) {
+							found = true;
+							tempRes = file;
+						}
+						DirectoryTree newNode = new DirectoryTree(file);
+						root.AddChild(newNode);
+						newNode.Explored = true;
+					}
+					if(found) {
+						first = false;
+						PathText.Text = tempRes + Environment.NewLine;
+						allResult.Add(tempRes);
+						if(!findAll) {
+							break;
+						}
 					}
 				} else {
 					DirectoryTree newNode = new DirectoryTree(current);
@@ -237,8 +253,25 @@ namespace FolderCrawler
 						stack.Push(newDirs[i]);
 					}
 					string[] files = Directory.GetFiles(current);
+					bool found = false;
+					string tempRes = "";
 					foreach(var file in files) {
-						root.AddChild(new DirectoryTree(file));
+						if(Helper.GetRightSide(file) == FileToSearch.Text) {
+							found = true;
+							tempRes = file;
+						}
+						DirectoryTree newNode = new DirectoryTree(file);
+						root.AddChild(newNode);
+						newNode.Explored = true;
+					}
+
+					if(found) {
+						first = false;
+						PathText.Text = tempRes + Environment.NewLine;
+						allResult.Add(tempRes);
+						if(!findAll) {
+							break;
+						}
 					}
 				} else {
 					DirectoryTree newNode = new DirectoryTree(current);
