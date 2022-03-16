@@ -225,6 +225,13 @@ namespace FolderCrawler
 				DirectoryTree newNode = new DirectoryTree(current);
 				if(Helper.GetRightSide(current) == FileToSearch.Text) {
 					newNode.Explored = true;
+					allResult.Add(current);
+					if(first) {
+						PathText.Text = current + Environment.NewLine;
+						first = false;
+					} else {
+						PathText.Text += current + Environment.NewLine; 
+					}
 				} else {
 					newNode.Explored = false;
 				}
@@ -313,6 +320,13 @@ namespace FolderCrawler
 				DirectoryTree newNode = new DirectoryTree(current);
 				if(Helper.GetRightSide(current) == FileToSearch.Text) {
 					newNode.Explored = true;
+					allResult.Add(current);
+					if(first) {
+						PathText.Text = current + Environment.NewLine;
+						first = false;
+					} else {
+						PathText.Text += current + Environment.NewLine; 
+					}
 				} else {
 					newNode.Explored = false;
 				}
