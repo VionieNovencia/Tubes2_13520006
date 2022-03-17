@@ -55,7 +55,7 @@ namespace FolderCrawler
 			return false;
 		}
 
-		// Menggambar pohon dengan menggunakan Msagl
+		// Menggambar pohon dengan menggunakan MSAGL
 		private void DrawTree() {
 			Drawing.Graph graph = new Drawing.Graph();
 
@@ -150,175 +150,234 @@ namespace FolderCrawler
 			TimeTaken.Content = "Time taken: " + elapsedTime;
 		}
 
+		// Melampirkan Hyperlink
+		// public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
+		// 	// for .NET Core you need to add UseShellExecute = true
+		// 	// see https://docs.microsoft.com/dotnet/api/system.diagnostics.processstartinfo.useshellexecute#property-value
+		// 	Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+		// 	e.Handled = true;
+		// 	Hyperlink.NavigateUriProperty
+		// }
+
 		// Menerapkan BFS
 		public void SearchBFS() {
 			bool first = true;
-			Queue<string> queue = new Queue<string>();
-			DirectoryTree root = null;
-			queue.Enqueue(folderDir);
+
+			Queue<string> queue = new Queue<string>();							//inisialisasi Queue
+
+			DirectoryTree root = null;											//Inisialisasi root node
+
+			queue.Enqueue(folderDir);											//Memasukkan path direktori folder
+
 			while(queue.Count > 0) {
-				string current = queue.Dequeue();
+				string current = queue.Dequeue();								//pembacaan pada current node (dilakukan dequeue)
+
 				if(root == null) {
-					root = new DirectoryTree(current);
+				//ketika pada root node
+					root = new DirectoryTree(current);							//root baru (current node)
 					root.Explored = true;
+
+					// catat direktori folder di dalam current
 					string[] newDirs = Directory.GetDirectories(current);
-					for(int i = 0; i < newDirs.Length; ++i) {
+
+					for(int i = 0; i < newDirs.Length; ++i) {					// insert seluruh isi direktori dari current ke dalam queue
 						queue.Enqueue(newDirs[i]);
 					}
-					string[] files = Directory.GetFiles(current);
+					string[] files = Directory.GetFiles(current);				//baca file-file di dalam current
 					bool found = false;
 					string tempRes = "";
 					foreach(var file in files) {
-						if(Helper.GetRightSide(file) == FileToSearch.Text) {
+						if(Helper.GetRightSide(file) == FileToSearch.Text) {	//ketemu file yang ingin dicari
 							found = true;
-							tempRes = file;
+							tempRes = file;		// tempRes mencatat Path file
 						}
+
+						//file tercatat 'telah terbaca'
 						DirectoryTree newNode = new DirectoryTree(file);
 						root.AddChild(newNode);
 						newNode.Explored = true;
 					}
-					if(found) {
-						first = false;
+					if(found) {	// jika telah ditemukan file
+						first = false;		// file telah ditemukan pertama kalinya.
+											// Selanjutnya , file yang sama menjadi file ke-n yang ditemukan
 						PathText.Text = tempRes + Environment.NewLine;
-						allResult.Add(tempRes);
-						if(!findAll) {
+						allResult.Add(tempRes);									// AllResult mencatat seluruh path dari target File
+						if(!findAll) {											// kontrol kasus 'find all occurrence'
 							break;
 						}
 					}
 				} else {
+				// ketika pada child node
 					DirectoryTree newNode = new DirectoryTree(current);
 					newNode.Explored = true;
 					DirectoryTree parentNode = DirectoryTree.FindChild(root, Helper.GetLeftSide(current));
-					parentNode.AddChild(newNode);
+													// jadikan path direktori berikutnya
+													// sebagai parentNode
+					parentNode.AddChild(newNode);								// catat newNode (node yang baru dibaca) ke dalam parentNode
+
+					// catat direktori folder di dalam current
 					string[] allDirs = Directory.GetDirectories(current);
-					foreach(var dir in allDirs) {
+
+					foreach(var dir in allDirs) {								// insert seluruh isi direktori dari current ke dalam queue
 						queue.Enqueue(dir);
-					}					
-					string[] files = Directory.GetFiles(current);
+					}
+
+					string[] files = Directory.GetFiles(current);				// catat file-file di dalam current
 					bool found = false;
 					string result = "";
 					foreach(var file in files) {
-						if(Helper.GetRightSide(file) == FileToSearch.Text) {
+						if(Helper.GetRightSide(file) == FileToSearch.Text) {	// ketika menemukan file yang dicari
 							found = true;
 							result = file;
 						}
+
+						// file tercatat 'telah dibaca'
 						DirectoryTree fileNode = new DirectoryTree(file);
+						newNode.AddChild(fileNode);								
 						fileNode.Explored = true;
-						newNode.AddChild(fileNode);
 					}
 					if(found) {
-						if(first) {
+						if(first) {												// ketika file yang terbaca merupakan file pertama yang ditemukan
 							PathText.Text = result + Environment.NewLine;
 							first = false;
 						} else {
 							PathText.Text += result + Environment.NewLine;
 						}
-						allResult.Add(result);
+						allResult.Add(result);									// AllResult mencatat seluruh path dari target File
 						if(!findAll) {
 							break;
 						}
 					}
 				}
 			}
+
+			// melakukan BFS pada node yang belum dieksplor
 			while(queue.Count > 0) {
 				string current = queue.Dequeue();
 				DirectoryTree newNode = new DirectoryTree(current);
-				if(Helper.GetRightSide(current) == FileToSearch.Text) {
-					newNode.Explored = true;
+				if(Helper.GetRightSide(current) == FileToSearch.Text) {			//file yang dicari ditemukan
+					//file tercatat 'telah terbaca'
 					allResult.Add(current);
+					newNode.Explored = true;
 					if(first) {
 						PathText.Text = current + Environment.NewLine;
 						first = false;
 					} else {
 						PathText.Text += current + Environment.NewLine; 
 					}
+
 				} else {
 					newNode.Explored = false;
 				}
 				DirectoryTree parentNode = DirectoryTree.FindChild(root, Helper.GetLeftSide(current));
 				parentNode.AddChild(newNode);
 			}
-			if(allResult.Count == 0) {
-				PathText.Text = "No file found!";
-			}
+
+			// file tidak ditemukan
+			if(allResult.Count == 0) {PathText.Text = "No file found!";}
+
+			//jalur-jalur hasil file yang ditemukan
 			treeResult = root;
 		}
 
 		// Menerapkan DFS
 		public void SearchDFS() {
 			bool first = true;
-			Stack<string> stack = new Stack<string>();
-			DirectoryTree root = null;
-			stack.Push(folderDir);
+			Stack<string> stack = new Stack<string>();							//inisialisasi Stack
+
+			DirectoryTree root = null;											//Inisialisasi root node
+			
+			stack.Push(folderDir);												//Memasukkan path direktori folder
+
 			while(stack.Count > 0) {
-				string current = stack.Pop();
+				string current = stack.Pop();									//pembacaan pada current node (dilakukan pop)
+				
 				if(root == null) {
-					root = new DirectoryTree(current);
+				//ketika pada root node
+					root = new DirectoryTree(current);							//root baru (current node)
 					root.Explored = true;
+
+					// catat direktori folder di dalam current
 					string[] newDirs = Directory.GetDirectories(current);
-					for(int i = 0; i < newDirs.Length; ++i) {
+
+					for(int i = 0; i < newDirs.Length; ++i) {					// insert seluruh isi direktori dari current ke dalam stack
 						stack.Push(newDirs[i]);
 					}
-					string[] files = Directory.GetFiles(current);
+
+					string[] files = Directory.GetFiles(current);				//baca file-file di dalam current
 					bool found = false;
 					string tempRes = "";
 					foreach(var file in files) {
-						if(Helper.GetRightSide(file) == FileToSearch.Text) {
+						if(Helper.GetRightSide(file) == FileToSearch.Text) {	//ketemu file yang ingin dicari
 							found = true;
-							tempRes = file;
+							tempRes = file;		// tempRes mencatat Path file
 						}
+
+						//file tercatat 'telah terbaca'
 						DirectoryTree newNode = new DirectoryTree(file);
 						root.AddChild(newNode);
 						newNode.Explored = true;
 					}
 
-					if(found) {
-						first = false;
+					if(found) {	// jika telah ditemukan file
+						first = false;		// file telah ditemukan pertama kalinya.
+											// Selanjutnya , file yang sama menjadi file ke-n yang ditemukan
 						PathText.Text = tempRes + Environment.NewLine;
-						allResult.Add(tempRes);
-						if(!findAll) {
+						allResult.Add(tempRes);									// AllResult mencatat seluruh path dari target File
+						if(!findAll) {											// kontrol kasus 'find all occurrence'
 							break;
 						}
 					}
 				} else {
+				// ketika pada child node
 					DirectoryTree newNode = new DirectoryTree(current);
 					newNode.Explored = true;
 					DirectoryTree parentNode = DirectoryTree.FindChild(root, Helper.GetLeftSide(current));
-					parentNode.AddChild(newNode);
+													// jadikan path direktori berikutnya
+													// sebagai parentNode
+					parentNode.AddChild(newNode);								// catat newNode (node yang baru dibaca) ke dalam parentNode
+
+					// catat direktori folder di dalam current
 					string[] allDirs = Directory.GetDirectories(current);
-					foreach(var dir in allDirs) {
+
+					foreach(var dir in allDirs) {								// insert seluruh isi direktori dari current ke dalam stack
 						stack.Push(dir);
-					}					
-					string[] files = Directory.GetFiles(current);
+					}				
+					string[] files = Directory.GetFiles(current);				// catat file-file di dalam current
 					bool found = false;
 					string result = "";
 					foreach(var file in files) {
-						if(Helper.GetRightSide(file) == FileToSearch.Text) {
+						if(Helper.GetRightSide(file) == FileToSearch.Text) {	// ketika menemukan file yang dicari
 							found = true;
 							result = file;
 						}
+
+						// file tercatat 'telah dibaca'
 						DirectoryTree fileNode = new DirectoryTree(file);
-						fileNode.Explored = true;
 						newNode.AddChild(fileNode);
+						fileNode.Explored = true;
 					}
 					if(found) {
-						if(first) {
+						if(first) {												// ketika file yang terbaca merupakan file pertama yang ditemukan
 							PathText.Text = result + Environment.NewLine;
 							first = false;
 						} else {
 							PathText.Text += result + Environment.NewLine;
 						}
-						allResult.Add(result);
+						allResult.Add(result);									// AllResult mencatat seluruh path dari target File
 						if(!findAll) {
 							break;
 						}
 					}
 				}
 			}
+
+			// melakukan DFS pada node yang belum dieksplor
 			while(stack.Count > 0) {
 				string current = stack.Pop();
 				DirectoryTree newNode = new DirectoryTree(current);
-				if(Helper.GetRightSide(current) == FileToSearch.Text) {
+				if(Helper.GetRightSide(current) == FileToSearch.Text) {			//file yang dicari ditemukan
+					//file tercatat 'telah terbaca'
 					newNode.Explored = true;
 					allResult.Add(current);
 					if(first) {
@@ -333,9 +392,11 @@ namespace FolderCrawler
 				DirectoryTree parentNode = DirectoryTree.FindChild(root, Helper.GetLeftSide(current));
 				parentNode.AddChild(newNode);
 			}
-			if(allResult.Count == 0) {
-				PathText.Text = "No file found!";
-			}
+
+			// file tidak ditemukan
+			if(allResult.Count == 0) {PathText.Text = "No file found!";}
+
+			//jalur-jalur hasil file yang ditemukan
 			treeResult = root;
 		}
 	}

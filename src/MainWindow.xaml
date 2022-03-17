@@ -24,7 +24,7 @@
 	</Window.Resources>
 	<StackPanel Orientation="Vertical">
 		<Label BorderThickness="0" FontSize="24" HorizontalAlignment="Center">
-			Folder Crawler
+			BreatheFirstBreadthLater
 		</Label>
 		<StackPanel Orientation="Horizontal" Margin="0, 15, 0, 0">
 			<Border CornerRadius="0" BorderBrush="Black" BorderThickness="0, 1, 1, 0">
@@ -75,7 +75,7 @@
 						</Label>
 					</StackPanel>
 					<Label FontSize="14" Margin="20, 0, 0, 0">
-						Input Metode Pencarian
+						Find file by :
 					</Label>
 					<RadioButton
 						Name="RadioBFS"
@@ -123,20 +123,27 @@
 					<Label FontSize="18" HorizontalAlignment="Center">
 						Output
 					</Label>
+
+					<!-- tampilkan graph -->
 					<gv:AutomaticGraphLayoutControl Name="GraphControl" Width="400" Height="300"/>
+
 					<Label FontSize="15">
 						Path File:
 					</Label>
+
+					<!-- tampilkan path file -->
 					<ScrollViewer>
 						<TextBox Name="PathText"
 							TextWrapping="Wrap"
 							VerticalScrollBarVisibility="Visible"
 							AcceptsReturn="True"
 							MaxHeight="50">
+							<!-- <Hyperlink NavigateUri="PathText" RequestNavigate="Hyperlink_RequestNavigate">
+							</Hyperlink> -->
 						</TextBox>
 					</ScrollViewer>
-					<Label Name="FilePath" FontSize="15">
-					</Label>
+					<!-- <Label Name="FilePath" FontSize="15">
+					</Label> -->
 				</StackPanel>
 			</Border>
 		</StackPanel>

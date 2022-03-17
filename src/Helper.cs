@@ -18,7 +18,13 @@ using Microsoft.Msagl.Drawing;
 
 namespace FolderCrawler {
 	public class Helper {
-		public static string GetRightSide(string dir) {
+		/* melakukan pembacaan pada path direktori
+			cth : terdapat sebuah path dir = "C:\A\B\D"
+					GetRightSide(dir) -> "C:\D"
+					GetLeftSide(dir)  -> "C:\A\B"
+		*/
+		
+		public static string GetRightSide(string dir) {					//baca sisi kiri direktori
 			StringBuilder result = new StringBuilder();
 			for(int i = dir.Length - 1; i > 0; --i) {
 				if(dir[i] == '\\') {
@@ -29,7 +35,7 @@ namespace FolderCrawler {
 			return new string(result.ToString().Reverse().ToArray());
 		}
 
-		public static string GetLeftSide(string dir) {
+		public static string GetLeftSide(string dir) {					//baca sisi kanan direktori
 			string temp = GetRightSide(dir);
 			StringBuilder sb = new StringBuilder(dir);
 			sb.Length -= temp.Length + 1;
