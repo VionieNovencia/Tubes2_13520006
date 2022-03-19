@@ -55,6 +55,9 @@ namespace FolderCrawler
 			}
 			return false;
 		}
+		private void CloseButton_Click(object sender, RoutedEventArgs e){
+			Close();
+		}
 
 		// Menggambar pohon dengan menggunakan MSAGL
 		private void DrawTree() {
@@ -130,7 +133,8 @@ namespace FolderCrawler
 
 		// Tombol search pada GUI
 		private void OnSearchButton(object sender, RoutedEventArgs e) {
-			ClearTextBlock();
+			ClearTextBlock();		// clear output path file (textblock)
+			RadioHome.IsChecked = true;
 			if(folderDir == "") {
 				MessageBox.Show("Please Choose a folder first");
 				return;
@@ -151,15 +155,11 @@ namespace FolderCrawler
 			findAll = FindAll.IsChecked == true;
 
 			allResult = new List<string>();
-			if(RadioBFS.IsChecked == true) {
-				SearchBFS();
-			} else {
-				SearchDFS();
-			}
-			DrawTree();
-			AddHyperlink();
-			// Program selesai, hentikan penghitungan waktu
-			stopwatch.Stop();
+			if(RadioBFS.IsChecked == true) 	{SearchBFS();}
+			else 							{SearchDFS();}
+			DrawTree();			// draw graph tree
+			AddHyperlink();		// create Hyperlink
+			stopwatch.Stop();	// Program selesai, hentikan penghitungan waktu
 			TimeSpan ts = stopwatch.Elapsed;
 
 			string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
@@ -192,11 +192,11 @@ namespace FolderCrawler
 
 		//fungsi ini digunakan untuk menambahkan lokasi lokasi file dalam bentuk hyperlink
 		public void AddHyperlink() {
-			if(allResult.Count == 0) {
+			if(allResult.Count == 0) {			// tidak ada hasil file
 				Label emptyLabel = new Label();
 				emptyLabel.Content = "No file found";
 				LinkTextBlock.Inlines.Add(emptyLabel);
-			} else {
+			} else {							// membentuk hyperlink pada tiap path file
 				foreach(var result in allResult) {
 					Run run = new Run(result);
 					Hyperlink hp = new Hyperlink(run);
@@ -206,6 +206,14 @@ namespace FolderCrawler
 					LinkTextBlock.Inlines.Add(hp);
 					LinkTextBlock.Inlines.Add(lb);
 				}
+			}
+		}
+
+		private void callHome(){
+			if(RadioHome.IsChecked == true){
+				RadioHelp.IsChecked = false;
+				RadioAbout.IsChecked = false;
+
 			}
 		}
 
