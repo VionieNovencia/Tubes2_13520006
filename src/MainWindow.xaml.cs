@@ -43,7 +43,7 @@ namespace FolderCrawler
 			InitializeComponent();
 		}
 
-		// Memutuskan apa warna garis (merah/biru)
+		// Memutuskan jenis warna garis (merah/biru)
 		private bool IsPathToItem(string checkPath, string itemPath) {
 			string temp = itemPath;
 			while(temp != treeResult.Name) {
@@ -151,12 +151,10 @@ namespace FolderCrawler
 		}
 
 		// Melampirkan Hyperlink
-		// public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
-		// 	// for .NET Core you need to add UseShellExecute = true
-		// 	// see https://docs.microsoft.com/dotnet/api/system.diagnostics.processstartinfo.useshellexecute#property-value
-		// 	Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-		// 	e.Handled = true;
-		// 	Hyperlink.NavigateUriProperty
+
+		// private void Hyperlink_Click(object sender, RoutedEventArgs e)
+		// {
+		// 	System.Diagnostics.Process.Start("PathText");
 		// }
 
 		// Menerapkan BFS

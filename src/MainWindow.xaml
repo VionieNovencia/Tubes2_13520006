@@ -23,10 +23,15 @@
 		</Style>
 	</Window.Resources>
 	<StackPanel Orientation="Vertical">
+
+		<!-- TITLE -->
 		<Label BorderThickness="0" FontSize="24" HorizontalAlignment="Center">
 			BreatheFirstBreadthLater
 		</Label>
+
 		<StackPanel Orientation="Horizontal" Margin="0, 15, 0, 0">
+
+			<!-- PANEL INPUT -->
 			<Border CornerRadius="0" BorderBrush="Black" BorderThickness="0, 1, 1, 0">
 				<StackPanel Style="{StaticResource PanelStyle}" Width="300">
 					<Label FontSize="18" HorizontalAlignment="Center" Margin="20, 0, 0, 10">
@@ -77,6 +82,7 @@
 					<Label FontSize="14" Margin="20, 0, 0, 0">
 						Find file by :
 					</Label>
+					<!-- BFS button -->
 					<RadioButton
 						Name="RadioBFS"
 						Margin ="20, 0, 0, 0"   
@@ -86,7 +92,8 @@
 							<ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
 						</RadioButton.LayoutTransform>
 						BFS
-					</RadioButton> 
+					</RadioButton>
+					<!-- DFS button -->
 					<RadioButton
 						Name="RadioDFS" 
 						Margin ="20,0 ,0 ,10"   
@@ -97,6 +104,7 @@
 						</RadioButton.LayoutTransform>
 						DFS
 					</RadioButton>
+					<!-- Search button -->
 					<Button Name="SearchBtn"
 							FontSize="14" 
 							Margin="90, 10, 0, 0"
@@ -118,6 +126,8 @@
 					</Label>
 				</StackPanel>
 			</Border>
+
+			<!-- PANEL OUTPUT -->
 			<Border CornerRadius="0" BorderBrush="Black" BorderThickness="0, 1, 0, 0">
 				<StackPanel Style="{StaticResource PanelStyle}" Width="460">
 					<Label FontSize="18" HorizontalAlignment="Center">
@@ -127,23 +137,22 @@
 					<!-- tampilkan graph -->
 					<gv:AutomaticGraphLayoutControl Name="GraphControl" Width="400" Height="300"/>
 
+					<!-- tampilkan path file -->
 					<Label FontSize="15">
 						Path File:
 					</Label>
-
-					<!-- tampilkan path file -->
 					<ScrollViewer>
 						<TextBox Name="PathText"
 							TextWrapping="Wrap"
 							VerticalScrollBarVisibility="Visible"
 							AcceptsReturn="True"
 							MaxHeight="50">
-							<!-- <Hyperlink NavigateUri="PathText" RequestNavigate="Hyperlink_RequestNavigate">
-							</Hyperlink> -->
+							<!-- <Hyperlink Click="PathText"></Hyperlink> -->
 						</TextBox>
 					</ScrollViewer>
-					<!-- <Label Name="FilePath" FontSize="15">
-					</Label> -->
+					<Label Name="FilePath" FontSize="15">
+						Silahkan copas ke file explorer (WORST CASE)
+					</Label>
 				</StackPanel>
 			</Border>
 		</StackPanel>
