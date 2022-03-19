@@ -130,6 +130,7 @@ namespace FolderCrawler
 
 		// Tombol search pada GUI
 		private void OnSearchButton(object sender, RoutedEventArgs e) {
+			ClearTextBlock();
 			if(folderDir == "") {
 				MessageBox.Show("Please Choose a folder first");
 				return;
@@ -157,7 +158,6 @@ namespace FolderCrawler
 			}
 			DrawTree();
 			AddHyperlink();
-
 			// Program selesai, hentikan penghitungan waktu
 			stopwatch.Stop();
 			TimeSpan ts = stopwatch.Elapsed;
