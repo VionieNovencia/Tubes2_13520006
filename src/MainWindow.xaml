@@ -141,18 +141,48 @@
 					<Label FontSize="15">
 						Path File:
 					</Label>
-					<ScrollViewer>
-						<TextBox Name="PathText"
-							TextWrapping="Wrap"
-							VerticalScrollBarVisibility="Visible"
-							AcceptsReturn="True"
-							MaxHeight="50">
-							<!-- <Hyperlink Click="PathText"></Hyperlink> -->
-						</TextBox>
+					<!-- <ScrollViewer Height="80">
+						<StackPanel Name="PathTextPanel" Orientation="Vertical">
+							<Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here
+							</Hyperlink>
+						</StackPanel>
+					</ScrollViewer> -->
+
+					<ScrollViewer Height="80">
+						<TextBlock Name="LinkTextBlock">
+							<!-- <Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here1
+							</Hyperlink>
+							<LineBreak />
+							<Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here2
+							</Hyperlink>
+							<LineBreak />
+							<Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here3
+							</Hyperlink>
+							<LineBreak />
+							<Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here4
+							</Hyperlink>
+							<LineBreak />
+							<Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here5
+							</Hyperlink>
+							<LineBreak />
+							<Hyperlink NavigateUri="http://www.google.com" 
+								RequestNavigate="Hyperlink_RequestNavigate">
+								Click here6
+							</Hyperlink> -->
+						</TextBlock>
 					</ScrollViewer>
-					<Label Name="FilePath" FontSize="15">
-						Silahkan copas ke file explorer (WORST CASE)
-					</Label>
 				</StackPanel>
 			</Border>
 		</StackPanel>

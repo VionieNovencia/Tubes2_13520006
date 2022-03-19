@@ -27,7 +27,7 @@ namespace FolderCrawler {
 		public static string GetRightSide(string dir) {					//baca sisi kiri direktori
 			StringBuilder result = new StringBuilder();
 			for(int i = dir.Length - 1; i > 0; --i) {
-				if(dir[i] == '\\') {
+				if(dir[i] == '\\' || dir[i] == '/') {
 					break;
 				}
 				result.Append(dir[i]);

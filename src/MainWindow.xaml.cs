@@ -41,9 +41,10 @@ namespace FolderCrawler
 		public MainWindow() {
 			AttachConsole(-1);
 			InitializeComponent();
+			ClearTextBlock();
 		}
 
-		// Memutuskan jenis warna garis (merah/biru)
+		// Memutuskan apa warna garis (merah/biru)
 		private bool IsPathToItem(string checkPath, string itemPath) {
 			string temp = itemPath;
 			while(temp != treeResult.Name) {
@@ -88,10 +89,26 @@ namespace FolderCrawler
 					Drawing.Edge edge = graph.AddEdge(
 							parentName, 
 							currentName);
+
+					// Drawing.Node parentNode = graph.FindNode(parentName);
+					// if(parentNode == null) {
+					// 	parentNode = graph.AddNode(parentName);
+					// }
+					// Drawing.Node childNode = graph.FindNode()
 					if(isPath) {
 						edge.Attr.Color = Drawing.Color.Blue;
+						Drawing.Node parent = graph.FindNode(parentName);
+						parent.Attr.FillColor = Drawing.Color.Blue;
+						Drawing.Node child = graph.FindNode(currentName);
+						child.Attr.FillColor = Drawing.Color.Blue;
 					} else {
 						edge.Attr.Color = Drawing.Color.Red;
+						Drawing.Node parent = graph.FindNode(parentName);
+						if(parent.Attr.FillColor != Drawing.Color.Blue) {
+							parent.Attr.FillColor = Drawing.Color.Red;
+						}
+						Drawing.Node child = graph.FindNode(currentName);
+						child.Attr.FillColor = Drawing.Color.Red;
 					}
 				} else {
 					graph.AddEdge(parentName, currentName).Attr.Color = Drawing.Color.Black;
@@ -139,23 +156,58 @@ namespace FolderCrawler
 				SearchDFS();
 			}
 			DrawTree();
+			AddHyperlink();
 
 			// Program selesai, hentikan penghitungan waktu
 			stopwatch.Stop();
 			TimeSpan ts = stopwatch.Elapsed;
 
 			string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-									            ts.Hours, ts.Minutes, ts.Seconds,
-									            ts.Milliseconds / 10);
+												ts.Hours, ts.Minutes, ts.Seconds,
+												ts.Milliseconds / 10);
 			TimeTaken.Content = "Time taken: " + elapsedTime;
 		}
 
-		// Melampirkan Hyperlink
+		/**
+		 * fungsi ini digunakan untuk menghapus 
+		 * daftar daftar dari direktori lokasi
+		 * file yang telah ada di dalam
+		 * textblock
+		 */
+		public void ClearTextBlock() {
+			LinkTextBlock.Inlines.Clear();
+		}
 
-		// private void Hyperlink_Click(object sender, RoutedEventArgs e)
-		// {
-		// 	System.Diagnostics.Process.Start("PathText");
-		// }
+		// fungsi ini digunakan untuk membuat hyperlink yang telah dibuat menjadi fungsional
+		public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
+			//mendapatkan hyperlink untuk membuka folder dimana terdapat file tersebut
+			var destinationurl = "file:///" + Helper.GetLeftSide(e.Uri.AbsoluteUri.Substring(8));
+	        var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
+	        {
+	            UseShellExecute = true,
+	        };
+	        System.Diagnostics.Process.Start(sInfo);
+			// Console.WriteLine("Test");
+		}
+
+		//fungsi ini digunakan untuk menambahkan lokasi lokasi file dalam bentuk hyperlink
+		public void AddHyperlink() {
+			if(allResult.Count == 0) {
+				Label emptyLabel = new Label();
+				emptyLabel.Content = "No file found";
+				LinkTextBlock.Inlines.Add(emptyLabel);
+			} else {
+				foreach(var result in allResult) {
+					Run run = new Run(result);
+					Hyperlink hp = new Hyperlink(run);
+					hp.NavigateUri = new Uri(result);
+					hp.RequestNavigate += new RequestNavigateEventHandler(Hyperlink_RequestNavigate);
+					LineBreak lb = new LineBreak();
+					LinkTextBlock.Inlines.Add(hp);
+					LinkTextBlock.Inlines.Add(lb);
+				}
+			}
+		}
 
 		// Menerapkan BFS
 		public void SearchBFS() {
@@ -195,10 +247,7 @@ namespace FolderCrawler
 						root.AddChild(newNode);
 						newNode.Explored = true;
 					}
-					if(found) {	// jika telah ditemukan file
-						first = false;		// file telah ditemukan pertama kalinya.
-											// Selanjutnya , file yang sama menjadi file ke-n yang ditemukan
-						PathText.Text = tempRes + Environment.NewLine;
+					if(found) {
 						allResult.Add(tempRes);									// AllResult mencatat seluruh path dari target File
 						if(!findAll) {											// kontrol kasus 'find all occurrence'
 							break;
@@ -235,12 +284,6 @@ namespace FolderCrawler
 						fileNode.Explored = true;
 					}
 					if(found) {
-						if(first) {												// ketika file yang terbaca merupakan file pertama yang ditemukan
-							PathText.Text = result + Environment.NewLine;
-							first = false;
-						} else {
-							PathText.Text += result + Environment.NewLine;
-						}
 						allResult.Add(result);									// AllResult mencatat seluruh path dari target File
 						if(!findAll) {
 							break;
@@ -249,31 +292,13 @@ namespace FolderCrawler
 				}
 			}
 
-			// melakukan BFS pada node yang belum dieksplor
+			// menambahkan node yang belum dieksplor ke dalam Graph
 			while(queue.Count > 0) {
 				string current = queue.Dequeue();
 				DirectoryTree newNode = new DirectoryTree(current);
-				if(Helper.GetRightSide(current) == FileToSearch.Text) {			//file yang dicari ditemukan
-					//file tercatat 'telah terbaca'
-					allResult.Add(current);
-					newNode.Explored = true;
-					if(first) {
-						PathText.Text = current + Environment.NewLine;
-						first = false;
-					} else {
-						PathText.Text += current + Environment.NewLine; 
-					}
-
-				} else {
-					newNode.Explored = false;
-				}
 				DirectoryTree parentNode = DirectoryTree.FindChild(root, Helper.GetLeftSide(current));
 				parentNode.AddChild(newNode);
 			}
-
-			// file tidak ditemukan
-			if(allResult.Count == 0) {PathText.Text = "No file found!";}
-
 			//jalur-jalur hasil file yang ditemukan
 			treeResult = root;
 		}
@@ -317,10 +342,7 @@ namespace FolderCrawler
 						newNode.Explored = true;
 					}
 
-					if(found) {	// jika telah ditemukan file
-						first = false;		// file telah ditemukan pertama kalinya.
-											// Selanjutnya , file yang sama menjadi file ke-n yang ditemukan
-						PathText.Text = tempRes + Environment.NewLine;
+					if(found) {
 						allResult.Add(tempRes);									// AllResult mencatat seluruh path dari target File
 						if(!findAll) {											// kontrol kasus 'find all occurrence'
 							break;
@@ -356,12 +378,6 @@ namespace FolderCrawler
 						fileNode.Explored = true;
 					}
 					if(found) {
-						if(first) {												// ketika file yang terbaca merupakan file pertama yang ditemukan
-							PathText.Text = result + Environment.NewLine;
-							first = false;
-						} else {
-							PathText.Text += result + Environment.NewLine;
-						}
 						allResult.Add(result);									// AllResult mencatat seluruh path dari target File
 						if(!findAll) {
 							break;
@@ -374,25 +390,9 @@ namespace FolderCrawler
 			while(stack.Count > 0) {
 				string current = stack.Pop();
 				DirectoryTree newNode = new DirectoryTree(current);
-				if(Helper.GetRightSide(current) == FileToSearch.Text) {			//file yang dicari ditemukan
-					//file tercatat 'telah terbaca'
-					newNode.Explored = true;
-					allResult.Add(current);
-					if(first) {
-						PathText.Text = current + Environment.NewLine;
-						first = false;
-					} else {
-						PathText.Text += current + Environment.NewLine; 
-					}
-				} else {
-					newNode.Explored = false;
-				}
 				DirectoryTree parentNode = DirectoryTree.FindChild(root, Helper.GetLeftSide(current));
 				parentNode.AddChild(newNode);
 			}
-
-			// file tidak ditemukan
-			if(allResult.Count == 0) {PathText.Text = "No file found!";}
 
 			//jalur-jalur hasil file yang ditemukan
 			treeResult = root;
