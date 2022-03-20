@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ using System.Windows.Threading;
 using System.Runtime.InteropServices;
 using Drawing = Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl;
+
 
 namespace FolderCrawler
 {
@@ -37,10 +39,13 @@ namespace FolderCrawler
 		DirectoryTree treeResult;
 		bool findAll;
 		List<string> allResult;
-		
+
+		public string LocationString { get { return Environment.CurrentDirectory + "/try.ico"; } }
+
 		public MainWindow() {
 			AttachConsole(-1);
 			InitializeComponent();
+			this.DataContext = this;
 			ClearTextBlock();
 		}
 
@@ -165,7 +170,7 @@ namespace FolderCrawler
 			LinkTextBlock.Inlines.Clear();
 		}
 
-		// fungsi ini digunakan untuk membuat hyperlink yang telah dibuat menjadi fungsional
+		// membuat hyperlink yang telah dibuat menjadi fungsional
 		public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
 			//mendapatkan hyperlink untuk membuka folder dimana terdapat file tersebut
 			var destinationurl = "file:///" + Helper.GetLeftSide(e.Uri.AbsoluteUri.Substring(8));
@@ -176,7 +181,7 @@ namespace FolderCrawler
 	        System.Diagnostics.Process.Start(sInfo);
 		}
 
-		//fungsi ini digunakan untuk menambahkan lokasi lokasi file dalam bentuk hyperlink
+		//menambahkan lokasi-lokasi file dalam bentuk hyperlink
 		public void AddHyperlink() {
 			if(allResult.Count == 0) {			// tidak ada hasil file
 				Label emptyLabel = new Label();
@@ -194,10 +199,17 @@ namespace FolderCrawler
 				}
 			}
 		}
-
+		// 'about' button reaction
+		private void about_click(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("BreatheFirstBreadthLast\nCreated with luv by us ❤️");
+		}
+		// credit button reaction
 		private void credit_click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("13520006 Vionie Novencia Thanggetyo" + Environment.NewLine +"13520092 Vieri Mansyl" + Environment.NewLine + "13520131 Steven" , "BreatheFirstBreadthLast");
+			MessageBox.Show("Kelompok 7 K02 :\n\n13520006 Vionie Novencia Thanggetyo" + 
+							Environment.NewLine +"13520092 Vieri Mansyl" + 
+							Environment.NewLine + "13520131 Steven" , "BreatheFirstBreadthLast");
 		}
 
 		// Menerapkan BFS

@@ -41,6 +41,33 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+
+		<Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">   
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="Gray" FontFamily="Arial"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
 	</Window.Resources>
 	<!-- PANEL INPUT -->
 	
@@ -66,11 +93,20 @@
 			<Border Height = "600" Width = "980" Background = "#F7E2E2" HorizontalAlignment = "Center" Margin= "0,50,0,0" CornerRadius = "20"/>
 		</StackPanel>
 
+
 		<!-- title -->
-		<StackPanel Grid.Row = "0" Grid.ColumnSpan = "2" Orientation="Horizontal">
-			<Border Height = "40" Width="40" Background = "White" Margin= "20,0,0,0">
-				<Image Source="logo.ico"/>
+		<StackPanel Grid.Row = "0" Grid.ColumnSpan = "2" Orientation="Horizontal">			
+			<Border x:Name="logo" Margin = "10,0,0,0"
+				CornerRadius="50" 
+				Width="50">
+
+				<Button Name="aboutButton" Click="about_click" Background="#000957" BorderThickness="0"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+						<Image  Source="{Binding LocationString}" />
+				</Button>
+
 			</Border>
+
 			<StackPanel Orientation="Vertical" >
 				<Label FontSize="24" HorizontalAlignment="Left" Margin = "20,0,0,0" Foreground = "#F7E2E2"
 					FontFamily = "Segoe Script" FontWeight = "Bold">
@@ -90,8 +126,8 @@
 				</Style>
 			</StackPanel.Resources>
 
-			<Button Name="creditButton" Click="credit_click" Background="#000957"
-					Margin = "0,0,20,0" Foreground = "#F7E2E2" FontSize="16" FontFamily = "Arial">
+			<Button Name="creditButton" Click="credit_click" Background="#000957" Margin = "0,0,20,0"
+			Foreground = "#F7E2E2" FontSize="16" FontFamily = "Arial" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
 					credit
 			</Button>
     	</StackPanel>
@@ -114,7 +150,7 @@
 					Choose Folder..
 				</Button>
 			</StackPanel>
-			<Label FontSize="14" Name="FolderDirLabel" Foreground = "#000957">
+			<Label FontSize="9" Name="FolderDirLabel" Foreground = "#000957">
 				No Folder Chosen
 			</Label>
 			<Label FontSize="14" Margin="20, 0, 0, 0" Foreground = "#000957">
@@ -126,7 +162,9 @@
 				Padding="5, 4"
 				Margin = "50,0,0,0"
 				BorderBrush="#5685ff"
-				Foreground="#5685ff">
+				Foreground="#5685ff"
+				Style="{StaticResource MyWaterMarkStyle}"
+				Tag="e.g. : file1.pdf , file2.txt , ...">
 				<TextBox.Resources>
 					<Style TargetType="Border">
 						<Setter Property="CornerRadius" Value="5"/>
@@ -187,18 +225,14 @@
 				</Button.Resources>
 				Search
 			</Button>
+
+
 			<Label Name="TimeTaken" Foreground = "#000957">
 				Time Taken: 
 			</Label>
 		</StackPanel>
 
 		<!-- PANEL OUTPUT -->
-		
-		<!-- close button -->
-		<!-- <StackPanel  Grid.Column = "1" Grid.Row = "0" Margin = "0,0,0,0" HorizontalAlignment= "Right">
-			<Button Name="CloseButton" Content="x" Margin= "0,0,0,0" Height = "25" Width = "25" 
-					Background = "red" Click="CloseButton_Click" />
-		</StackPanel> -->
 
 		<StackPanel Grid.Column = "1" Grid.Row = "1" Margin = "50,50,50,0">
 			<Label FontSize="18" HorizontalAlignment="Center" Foreground = "#000957" FontWeight = "Bold">
@@ -212,10 +246,10 @@
 			<Label FontSize="15" Foreground = "#000957">
 				Path File:
 			</Label>
-					<ScrollViewer Height="80">
-						<TextBlock Name="LinkTextBlock">
-						</TextBlock>
-					</ScrollViewer>
-				</StackPanel>
-			</Grid>
+			<ScrollViewer Height="80">
+				<TextBlock Name="LinkTextBlock">
+				</TextBlock>
+			</ScrollViewer>
+		</StackPanel>
+	</Grid>
 </Window>
