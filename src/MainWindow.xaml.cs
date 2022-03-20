@@ -82,8 +82,6 @@ namespace FolderCrawler
 				if(currentNode.Explored) {
 					bool isPath = false;
 					for(int i = 0; i < allResult.Count; ++i) {
-						// Console.WriteLine("Current: " + current);
-						// Console.WriteLine("All result: " + allResult[i]);
 						if(IsPathToItem(current, allResult[i])) {
 							isPath = true;
 							break;
@@ -93,11 +91,6 @@ namespace FolderCrawler
 							parentName, 
 							currentName);
 
-					// Drawing.Node parentNode = graph.FindNode(parentName);
-					// if(parentNode == null) {
-					// 	parentNode = graph.AddNode(parentName);
-					// }
-					// Drawing.Node childNode = graph.FindNode()
 					if(isPath) {
 						edge.Attr.Color = Drawing.Color.Blue;
 						Drawing.Node parent = graph.FindNode(parentName);
@@ -134,7 +127,6 @@ namespace FolderCrawler
 		// Tombol search pada GUI
 		private void OnSearchButton(object sender, RoutedEventArgs e) {
 			ClearTextBlock();		// clear output path file (textblock)
-			RadioHome.IsChecked = true;
 			if(folderDir == "") {
 				MessageBox.Show("Please Choose a folder first");
 				return;
@@ -168,12 +160,7 @@ namespace FolderCrawler
 			TimeTaken.Content = "Time taken: " + elapsedTime;
 		}
 
-		/**
-		 * fungsi ini digunakan untuk menghapus 
-		 * daftar daftar dari direktori lokasi
-		 * file yang telah ada di dalam
-		 * textblock
-		 */
+		// membersihkan isi di dalam textblock
 		public void ClearTextBlock() {
 			LinkTextBlock.Inlines.Clear();
 		}
@@ -187,7 +174,6 @@ namespace FolderCrawler
 	            UseShellExecute = true,
 	        };
 	        System.Diagnostics.Process.Start(sInfo);
-			// Console.WriteLine("Test");
 		}
 
 		//fungsi ini digunakan untuk menambahkan lokasi lokasi file dalam bentuk hyperlink
@@ -209,12 +195,9 @@ namespace FolderCrawler
 			}
 		}
 
-		private void callHome(){
-			if(RadioHome.IsChecked == true){
-				RadioHelp.IsChecked = false;
-				RadioAbout.IsChecked = false;
-
-			}
+		private void credit_click(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("13520006 Vionie Novencia Thanggetyo" + Environment.NewLine +"13520092 Vieri Mansyl" + Environment.NewLine + "13520131 Steven" , "BreatheFirstBreadthLast");
 		}
 
 		// Menerapkan BFS
