@@ -207,7 +207,7 @@ namespace FolderCrawler
 		// credit button reaction
 		private void credit_click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Kelompok 7 K02 :\n\n13520006 Vionie Novencia Thanggetyo" + 
+			MessageBox.Show("Kelompok 7 IF2211 2021/2022 :\n\n13520006 Vionie Novencia Thanggetyo" + 
 							Environment.NewLine +"13520092 Vieri Mansyl" + 
 							Environment.NewLine + "13520131 Steven" , "BreatheFirstBreadthLast");
 		}
