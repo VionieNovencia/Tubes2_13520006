@@ -64,10 +64,11 @@ namespace FolderCrawler
 			cth :
 				FindChild(root, "C:\A\B\D\E") ; dimana root = C:\A
 					iter 1 : rootChilds = [C:\A\B\D\E]
-							 current    = 
-
-
-				keluaran : sebuah directoryTree bernilai C:\A\B\D
+					iter 2 : rootChilds = [C:\A\B\D]
+					iter 3 : rootChilds = [C:\A\B]
+					iter 4 : rootChilds = [C:\A]
+					
+					Stop iterasi karena rootChilds telah sama dengan root
 		*/
 		public static DirectoryTree FindChild(DirectoryTree root, string name) {
 			List<string> rootChilds = new List<string>();
