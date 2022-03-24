@@ -12,6 +12,7 @@
 		Background = "#292C6D"
 		ResizeMode = "NoResize"
 		WindowStartupLocation = "CenterScreen"
+		Icon = "{Binding LocationString}"
 		>
 	<Window.Resources>
 		<Style x:Key="ChooseDirButton" TargetType="Button">
