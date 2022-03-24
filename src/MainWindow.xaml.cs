@@ -40,7 +40,7 @@ namespace FolderCrawler
 		bool findAll;
 		List<string> allResult;
 
-		public string LocationString { get { return Environment.CurrentDirectory + "/try.ico"; } }
+		public string LocationString { get { return Environment.CurrentDirectory + "/logo.ico"; } }
 
 		public MainWindow() {
 			AttachConsole(-1);
